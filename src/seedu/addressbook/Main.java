@@ -7,6 +7,7 @@ import java.util.Optional;
 import seedu.addressbook.commands.Command;
 import seedu.addressbook.commands.CommandResult;
 import seedu.addressbook.commands.ExitCommand;
+import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.AddressBook;
 import seedu.addressbook.data.person.ReadOnlyPerson;
 import seedu.addressbook.parser.Parser;
@@ -84,10 +85,13 @@ public class Main {
         do {
             String userCommandText = ui.getUserCommand();
             command = new Parser().parseCommand(userCommandText);
-            CommandResult result = executeCommand(command);
-            recordResult(result);
-            ui.showResultToUser(result);
-
+            try {
+                CommandResult result = executeCommand(command);
+                recordResult(result);
+                ui.showResultToUser(result);
+            } catch (StorageOperationException e) {
+                start(new String[0]);//restart the program
+            }
         } while (!ExitCommand.isExit(command));
     }
 
@@ -105,12 +109,16 @@ public class Main {
      * @param command user command
      * @return result of the command
      */
-    private CommandResult executeCommand(Command command)  {
+    private CommandResult executeCommand(Command command) throws StorageOperationException {
         try {
             command.setData(addressBook, lastShownList);
             CommandResult result = command.execute();
             storage.save(addressBook);
             return result;
+        } catch (StorageOperationException e) {
+            ui.showToUser(e.getMessage());
+            ui.showToUser(Messages.MESSAGE_UNCHECK_READ_ONLY);
+            throw new StorageOperationException(e.getMessage());
         } catch (Exception e) {
             ui.showToUser(e.getMessage());
             throw new RuntimeException(e);
