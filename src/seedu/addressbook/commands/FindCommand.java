@@ -1,10 +1,6 @@
 package seedu.addressbook.commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import seedu.addressbook.data.person.ReadOnlyPerson;
 
@@ -48,13 +44,57 @@ public class FindCommand extends Command {
      */
     private List<ReadOnlyPerson> getPersonsWithNameContainingAnyKeyword(Set<String> keywords) {
         final List<ReadOnlyPerson> matchedPersons = new ArrayList<>();
+
+        keywords = getKeywordsInLowerCase(keywords);
+
         for (ReadOnlyPerson person : addressBook.getAllPersons()) {
-            final Set<String> wordsInName = new HashSet<>(person.getName().getWordsInName());
+            Set<String> wordsInName = new HashSet<>(person.getName().getWordsInName());
+            wordsInName = getWordsInNameInLowerCase(wordsInName);
             if (!Collections.disjoint(wordsInName, keywords)) {
                 matchedPersons.add(person);
             }
         }
         return matchedPersons;
+    }
+
+
+    /**
+     * Converts words in name to lower case
+     *
+     * @param wordsInName contains words in name to be ccnverted
+     * @return set of words in name in lower case
+     */
+    private static Set<String> getWordsInNameInLowerCase(Set<String> wordsInName) {
+        Set<String> candidatesToRemove = new HashSet<>();
+        Set<String> candidatesToAdd = new HashSet<>();
+
+        for (String wordInName : wordsInName) {
+            candidatesToRemove.add(wordInName);
+            candidatesToAdd.add(wordInName.toLowerCase());
+        }
+        wordsInName.removeAll(candidatesToRemove);
+        wordsInName.addAll(candidatesToAdd);
+        return wordsInName;
+    }
+
+    /**
+     * Converts keywords to lower case
+     *
+     * @param keywords contains keywords to be ccnverted
+     * @return collection of keywords in lower case
+     */
+    private static Set<String> getKeywordsInLowerCase(Set<String> keywords) {
+        Set<String> candidatesToRemove = new HashSet<>();
+        Set<String> candidatesToAdd = new HashSet<>();
+
+        for (String keyword : keywords) {
+            candidatesToRemove.remove(keyword);
+            candidatesToAdd.add(keyword.toLowerCase());
+        }
+
+        keywords.removeAll(candidatesToRemove);
+        keywords.addAll(candidatesToAdd);
+        return keywords;
     }
 
 }
