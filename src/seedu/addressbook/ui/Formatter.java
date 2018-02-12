@@ -26,6 +26,7 @@ public class Formatter {
     /** Offset required to convert between 1-indexing and 0-indexing.  */
     public static final int DISPLAYED_INDEX_OFFSET = 1;
 
+
     /**
      * Formats user input prompt to be printed
      * @return user input prompt to be printed in formatted form
@@ -62,5 +63,7 @@ public class Formatter {
     public static String formatShowToUser(String message) {
         return LINE_PREFIX + message.replace("\n", LS + LINE_PREFIX);
     }
+
+
 
 }
