@@ -60,10 +60,10 @@ public class UtilsTest {
     }
 
     private void assertNull(Object... objects) {
-        assertTrue(Arrays.asList(objects).contains(null));
+        assertTrue(Utils.isAnyNull(objects));
     }
 
     private void assertNotNull(Object... objects) {
-        assertFalse(Arrays.asList(objects).contains(null));
+        assertFalse(Utils.isAnyNull(objects));
     }
 }
