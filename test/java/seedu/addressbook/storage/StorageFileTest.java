@@ -121,8 +121,4 @@ public class StorageFileTest {
                                 new UniqueTagList(new Tag("friend"), new Tag("criminal"))));
         return ab;
     }
-
-
 }
-
-
